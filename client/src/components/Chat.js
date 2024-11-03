@@ -40,6 +40,19 @@ const Chat = () => {
     setInput(input + emoji.native);
     setShowEmojiPicker(false);
   };
+  
+  useEffect(() => {
+    Notification.requestPermission();
+  }, []);
+  socket.on('receiveMessage', (message) => {
+    setMessages((prev) => [...prev, message]);
+    if (Notification.permission === 'granted') {
+      new Notification('New Message', {
+        body: message.text,
+      });
+    }
+  });
+  
 
   return (
     <div>
