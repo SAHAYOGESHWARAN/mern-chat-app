@@ -6,7 +6,8 @@ const MessageSchema = new mongoose.Schema({
     required: true,
   },
   sender: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Reference to the User model
     required: true,
   },
   timestamp: {
