@@ -22,6 +22,19 @@ const Chat = () => {
       setInput('');
     }
   };
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const response = await axios.get('http://localhost:5000/api/messages');
+      setMessages(response.data);
+    };
+  
+    fetchMessages();
+  
+    socket.on('receiveMessage', (message) => {
+      setMessages((prev) => [...prev, message]);
+    });
+  }, []);
+  
 
   const addEmoji = (emoji) => {
     setInput(input + emoji.native);
