@@ -37,3 +37,14 @@ exports.login = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });
   };
+
+
+  exports.register = async (req, res) => {
+    const { phoneNumber, username } = req.body;
+    
+    const newUser = new User({ phoneNumber, username });
+    await newUser.save();
+    
+    res.status(201).json(newUser);
+  };
+  
