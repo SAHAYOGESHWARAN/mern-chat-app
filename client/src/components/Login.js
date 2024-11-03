@@ -23,5 +23,11 @@ const Login = () => {
     </div>
   );
 };
+const handleLogin = async () => {
+    await axios.post('http://localhost:5000/api/auth/send-sms', { phoneNumber });
+    // Prompt user for verification code
+    // After receiving the code, verify it with another API call
+  };
+  
 
 export default Login;
