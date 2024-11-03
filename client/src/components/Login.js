@@ -25,8 +25,15 @@ const Login = () => {
 };
 const handleLogin = async () => {
     await axios.post('http://localhost:5000/api/auth/send-sms', { phoneNumber });
-    // Prompt user for verification code
-    // After receiving the code, verify it with another API call
+  
+    const code = prompt('Enter the verification code:'); // Simple prompt for demo purposes
+    const response = await axios.post('http://localhost:5000/api/auth/login', {
+      phoneNumber,
+      verificationCode: code,
+    });
+  
+    localStorage.setItem('token', response.data.token); // Store token in local storage
+    history.push('/chat');
   };
   
 
