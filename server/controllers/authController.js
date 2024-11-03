@@ -1,4 +1,6 @@
 const twilio = require('twilio');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User'); // Create a User model for storing phone numbers
 
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
@@ -21,4 +23,17 @@ exports.sendSms = async (req, res) => {
   res.status(200).send('Verification code sent');
 };
 
-// Implement verification code handling
+exports.login = async (req, res) => {
+    const { phoneNumber, verificationCode } = req.body;
+    const user = await User.findOne({ phoneNumber });
+  
+    if (!user || user.verificationCode !== verificationCode) {
+      return res.status(400).send('Invalid phone number or verification code');
+    }
+  
+    user.isVerified = true; // Update the user to verified
+    await user.save();
+  
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token });
+  };
